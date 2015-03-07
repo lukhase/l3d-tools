@@ -1,0 +1,12 @@
+﻿<Window x:Class="L3dStrJahreszeiten.ChooseSetDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Set auswählen" Height="226" Width="300" Loaded="Window_Loaded" >
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom">
+            <Button Content="Abbrechen" DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="10,0" Margin="5" Click="Cancel_Click"/>
+            <Button Content="Ok" DockPanel.Dock="Left" HorizontalAlignment="Left" Padding="10,0" Margin="5" Click="Ok_Click"/>
+        </DockPanel>
+        <ListView x:Name="lvSets" DisplayMemberPath="Name" />
+    </DockPanel>
+</Window>

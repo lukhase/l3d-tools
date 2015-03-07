@@ -1,0 +1,10 @@
+﻿<Window x:Class="L3dStrJahreszeiten.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Einstellungen" Height="166" Width="300" Loaded="Window_Loaded">
+    <StackPanel Orientation="Vertical">
+        <TextBox Text="Loksim-Pfad" Margin="5"/>
+        <TextBox x:Name="tbPath" Margin="5"/>
+        <Button Content="OK" Width="Auto" HorizontalAlignment="Center" MinWidth="40" Margin="5" Click="Ok_Click"/>
+    </StackPanel>
+</Window>

@@ -1,0 +1,266 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:L3dStrJahreszeiten" x:Class="L3dStrJahreszeiten.MainWindow"
+        xmlns:usrCtrls="clr-namespace:L3dStrJahreszeiten.Views.Controls"
+        Title="Loksim Jahreszeiten Tool" Height="425" Width="686"
+        Loaded="Window_Loaded" Closing="mainWnd_Closing"   
+        x:Name="mainWnd"
+    >
+    <Window.Resources>
+        <local:NotNullObjToBooleanConverter x:Key="notNullConverter" />
+    </Window.Resources>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Datei">
+                <MenuItem Header="Speichern" Click="MenuSave_Click" />
+            </MenuItem>
+        </Menu>
+        <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <TabItem Header="Projekt" x:Name="tabProject">
+                <StackPanel>
+                    <DockPanel>
+                        <Label Content="Zuletzt verwendete Projekte:" DockPanel.Dock="Top"/>
+                        <WrapPanel Orientation="Vertical" DockPanel.Dock="Right">
+                            <Button Content="Ausgewähltes Projekt laden" Command="{Binding Path=LoadProjectCmd}" Margin="5"/>
+                            <Button Content="Neues Projekt" Margin="5" Command="{Binding Path=CreateNewProjectCmd}" />
+                            <Button Content="Projekt von Dateisystem laden" Command="{Binding Path=LoadFromFileCmd}" Margin="5" />
+                        </WrapPanel>
+                        <ListBox MinWidth="250" MinHeight="100" ItemsSource="{Binding Path=Projekte}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedProject}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,10,0,0">
+                        <Label Content="Loksim-Pfad:" Margin="5" VerticalAlignment="Center" DockPanel.Dock="Left" />
+                        <Button Content="Durchsuchen" Margin="5" DockPanel.Dock="Right"/>
+                        <TextBox MinWidth="200" VerticalAlignment="Center" Margin="5" Text="{Binding Path=SelectedProject.LoksimDirectory}" />
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="Projekt-Pfad:" Margin="5" VerticalAlignment="Center" DockPanel.Dock="Left" />
+                        <TextBox MinWidth="200" VerticalAlignment="Center" Margin="5" Text="{Binding Path=SelectedProject.ProjectDirectory}" IsReadOnly="True"/>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Sets" x:Name="tabSets">
+                <DockPanel>
+                    <WrapPanel Margin="5" HorizontalAlignment="Stretch" Orientation="Vertical" DockPanel.Dock="Right">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBox Width="100" Margin="5" Text="{Binding ElementName=listviewSets, Path=SelectedItem.Name}" 
+                                 IsEnabled="{Binding ElementName=listviewSets, Path=SelectedItem, Converter={StaticResource notNullConverter}}" />
+                            <Button Content="Set hinzufügen" Width="Auto" Height="Auto" VerticalAlignment="Center" Command="{Binding Path=AddSetCmd}" />
+                        </StackPanel>
+                        <Button Content="Set löschen" Command="{Binding Path=DeleteSetCmd}" />
+                        <Label Content="Automatisches Ersetzen:" Margin="1,10,1,1" />
+                        <ListBox MinWidth="200" Height="100" Margin="0" HorizontalAlignment="Stretch" Width="Auto" 
+                             ItemsSource="{Binding Path=Ersetzungen}" x:Name="listviewErsetzungen" SelectedItem="{Binding Path=SelectedErsetzung}"
+                             >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0">
+                                        <Label Content="{Binding Path=OriginalName}" Margin="0" Padding="0" />
+                                        <Label Content="=>" Padding="0" Margin="5,0" />
+                                        <Label Content="{Binding Path=NewName}" Margin="0" Padding="0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Width="100" Margin="5" Text="{Binding ElementName=listviewErsetzungen, Path=SelectedItem.OriginalName}"
+                                 IsEnabled="{Binding ElementName=listviewErsetzungen, Path=SelectedItem, Converter={StaticResource notNullConverter}}" />
+                            <TextBox Width="100" Margin="5" Text="{Binding ElementName=listviewErsetzungen, Path=SelectedItem.NewName}"
+                                 IsEnabled="{Binding ElementName=listviewErsetzungen, Path=SelectedItem, Converter={StaticResource notNullConverter}}" />
+                        </StackPanel>
+                        <Button Content="Ersetzung hinzufügen" Width="Auto" Height="Auto" VerticalAlignment="Center" Command="{Binding Path=AddErsetzungCmd}" />
+                        <Button Content="Ersetzung löschen" Margin="1,10,1,1" Command="{Binding Path=DeleteErsetzungCmd}" />
+                    </WrapPanel>
+                    <ListBox MinWidth="150" DockPanel.Dock="Left" ItemsSource="{Binding Path=ReplacementSets}" x:Name="listviewSets" DisplayMemberPath="Name" 
+                         SelectedItem="{Binding Path=SelectedSet}" />
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Quell- und Zieldateien" x:Name="tabFiles">
+                <StackPanel>
+                    <DockPanel Margin="5">
+                        <ListBox Width="200" ItemsSource="{Binding Path=Fahrplaene}" x:Name="listviewFahrplaene" DockPanel.Dock="Left" 
+                             SelectedItem="{Binding Path=SelectedFahrplan}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0">
+                                        <Label Content="{Binding Path=OriginalName}" Margin="0" Padding="0" />
+                                        <Label Content="=>" Padding="0" Margin="5,0" />
+                                        <Label Content="{Binding Path=NewName}" Margin="0" Padding="0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Fahrplan hinzufügen" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=AddFplCmd}" Margin="2" />
+                                <Button Content="Fahrplan löschen" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=DeleteFplCmd}" Margin="2" />
+                                <Button Content="Auto KBS und STR" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=SearchForKbsAndStrCmd}" Margin="2" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Margin="5" Text="{Binding ElementName=listviewFahrplaene, Path=SelectedItem.OriginalName}" />
+                                <TextBox Margin="5" Text="{Binding ElementName=listviewFahrplaene, Path=SelectedItem.NewName}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <DockPanel Margin="5">
+                        <ListBox Width="200" ItemsSource="{Binding Path=Kursbuchstrecken}" x:Name="listviewKursbuchstrecken" DockPanel.Dock="Left" 
+                             SelectedItem="{Binding Path=SelectedKursbuchstrecke}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0">
+                                        <Label Content="{Binding Path=OriginalName}" Margin="0" Padding="0" />
+                                        <Label Content="=>" Padding="0" Margin="5,0" />
+                                        <Label Content="{Binding Path=NewName}" Margin="0" Padding="0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="KBS hinzufügen" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=AddKursbuchstreckeCmd}" Margin="2" />
+                                <Button Content="KBS löschen" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=DeleteKursbuchstreckeCmd}" Margin="2" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Margin="5" Text="{Binding ElementName=listviewKursbuchstrecken, Path=SelectedItem.OriginalName}" />
+                                <TextBox Margin="5" Text="{Binding ElementName=listviewKursbuchstrecken, Path=SelectedItem.NewName}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <DockPanel Margin="5">
+                        <ListBox Width="200" ItemsSource="{Binding Path=Strecken}" x:Name="listviewStrecken" DockPanel.Dock="Left" 
+                             SelectedItem="{Binding Path=SelectedStrecke}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0">
+                                        <Label Content="{Binding Path=OriginalName}" Margin="0" Padding="0" />
+                                        <Label Content="=>" Padding="0" Margin="5,0" />
+                                        <Label Content="{Binding Path=NewName}" Margin="0" Padding="0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Strecke hinzufügen" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=AddStreckeCmd}" Margin="2" />
+                                <Button Content="Strecke löschen" Width="Auto" HorizontalAlignment="Center" Command="{Binding Path=DeleteStreckeCmd}" Margin="2" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Margin="5" Text="{Binding ElementName=listviewStrecken, Path=SelectedItem.OriginalName}" />
+                                <TextBox Margin="5" Text="{Binding ElementName=listviewStrecken, Path=SelectedItem.NewName}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+
+
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Ersetzungen" x:Name="tabErsetzungen">
+                <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                    <StackPanel Orientation="Vertical">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--
+                        <Button Content="Ersetzungen in CSV speichern" Grid.Row="0" Grid.Column="1" Margin="5"  />
+                        <Button Content="Ersetzungen von CSV hinzufügen" Grid.Row="0" Grid.Column="0" Margin="5" />
+                        <Button Content="Ersetzungen in Streckendatei durchführen" Grid.Row="1" Grid.Column="1" Margin="5" />
+                        -->
+                            <Button Content="Streckenobjekte auslesen" Grid.Row="0" Grid.Column="0" Margin="5" Command="{Binding Path=ReadObjectFilesCmd}" />
+
+                            <CheckBox Content="Ausgeblendete Einträge zeigen" Grid.Row="0" Grid.Column="1"  IsChecked="{Binding ShowInvisible}" VerticalAlignment="Center" Margin="10,0"/>
+
+                            <Button Content="Ausgeblendete Einträge übernehmen" Grid.Column="2" VerticalAlignment="Center" Command="{Binding Path=ApplyHiddenEntries}" />
+                        </Grid>
+
+                        <DataGrid ItemsSource="{Binding Replacements}" AutoGenerateColumns="False" Margin="5" HorizontalScrollBarVisibility="Disabled">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding DateAdded}" Header="Datum" IsReadOnly="True" />
+
+                                <DataGridTemplateColumn Header="Original">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox IsReadOnly="True" Text="{Binding Original.PathRelativeToL3dDir,Mode=OneWay}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Ersetzung">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <usrCtrls:FilePathControl FilePath="{Binding Replacement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                          AlternativeFilePath="{Binding Original, Mode=OneWay}"
+                                                              FileDialogFilters="{Binding DataContext.FileDlgFilters, Mode=OneTime,RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                              MinWidth="200" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <!--
+                    <DataGridTextColumn Binding="{Binding Replacement}" Header="Ersetzung"/>
+                    -->
+
+                                <DataGridCheckBoxColumn Binding="{Binding IsVisible}" Header="Sichtbar" />
+
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <!--
+        <ListBox ItemsSource="{Binding Replacements}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid HorizontalAlignment="Stretch" Background="Blue">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding Original}" IsEnabled="False" Grid.Column="0"/>
+                        <TextBox Text="{Binding Replacement}" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    -->
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Ersetzungen durchführen" x:Name="tabWork">
+                <DockPanel>
+                    <TextBlock Text="Bitte zuvor eine Sicherungskopie der betroffenen Dateien erstellen!&#10;Dateien werden ohne Nachfrage überschrieben" FontWeight="Bold" DockPanel.Dock="Top"/>
+                    <StackPanel Orientation="Vertical" DockPanel.Dock="Left" MinWidth="300" Margin="5,0">
+                        <Label Content="Tasks" />
+                        <ListView ItemsSource="{Binding Path=Tasks}" MinHeight="100">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding Path=ProcessTask}" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Path=Description}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListView>
+                        <Button Content="Start" Command="{Binding Path=DoWorkCmd}" HorizontalAlignment="Left" Padding="10,0" Margin="5"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" MinWidth="200" HorizontalAlignment="Stretch" Margin="5,0">
+                        <Label Content="Fehler" />
+                        <ListView IsEnabled="False" ItemsSource="{Binding Path=Errors, Mode=OneWay}" VerticalAlignment="Stretch" MinHeight="100" />
+                    </StackPanel>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

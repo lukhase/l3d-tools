@@ -1,0 +1,14 @@
+﻿<Window x:Class="L3dBench.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Loksim3D Benchmarking" Height="350" Width="525" Loaded="Window_Loaded">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Name="btnStart" Content="Starte Benchmarks" Click="Start_Click"  VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="50" Margin="5"/>
+            <Button Name="btnHelp" Content="Anleitung" Click="Help_Click" Margin="5"/>
+        </StackPanel>
+        <ScrollViewer>
+            <TextBox IsReadOnly="True" Name="tbStatus" />
+        </ScrollViewer>
+    </DockPanel>
+</Window>

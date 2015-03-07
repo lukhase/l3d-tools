@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BenchmarkList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Benchmarks>
+    <BenchmarkSettings>
+      <Fpl>D:\LoksimDevelopment\Loksim-Data\Fahrplan\Dev\SimpleFpl.l3dfpl</Fpl>
+      <Lok>D:\LoksimDevelopment\Loksim-Data\Lok\Triebwagen\BR 406\UPeters\406_080.l3dlok</Lok>
+      <StartBhf>h0 "ui"</StartBhf>
+      <StartIndex>1</StartIndex>
+      <WetterIndex>1</WetterIndex>
+      <L3dDir>D:\LoksimDevelopment\Loksim3d\</L3dDir>
+      <L3dExeToTest>D:\LoksimDevelopment\Loksim3d\Loksim3D.exe</L3dExeToTest>
+      <FrapsBenchmarkDir>D:\Fraps\Benchmarks</FrapsBenchmarkDir>
+      <MeterZuFahren>3000</MeterZuFahren>
+      <Name>NB SimpleFpl</Name>
+    </BenchmarkSettings>
+    <BenchmarkSettings>
+      <Fpl>D:\LoksimDevelopment\Loksim-Data\Fahrplan\Dev\SimpleFpl2.l3dfpl</Fpl>
+      <Lok>D:\LoksimDevelopment\Loksim-Data\Lok\Triebwagen\BR 406\UPeters\406_080.l3dlok</Lok>
+      <StartBhf>gl2_halt</StartBhf>
+      <StartIndex>0</StartIndex>
+      <WetterIndex>1</WetterIndex>
+      <L3dDir>D:\LoksimDevelopment\Loksim3d\</L3dDir>
+      <L3dExeToTest>D:\LoksimDevelopment\Loksim3d\Loksim3D.exe</L3dExeToTest>
+      <FrapsBenchmarkDir>D:\Fraps\Benchmarks</FrapsBenchmarkDir>
+      <MeterZuFahren>1500</MeterZuFahren>
+      <Name>NB SimpleFpl2</Name>
+    </BenchmarkSettings>
+  </Benchmarks>
+</BenchmarkList>
